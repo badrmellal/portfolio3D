@@ -13,6 +13,7 @@ export function Avatar(props) {
   const { scene } = useGLTF('/modelCharacter.glb')
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
   const { nodes, materials } = useGraph(clone)
+  const { animation } = props;
 
   const { animations: typingAnimation } = useFBX("src/animations/Typing.fbx");
   const { animations: fallingAnimation } = useFBX("src/animations/Falling.fbx");
@@ -24,11 +25,11 @@ export function Avatar(props) {
 
   const { actions } = useAnimations([typingAnimation[0], fallingAnimation[0], hardLandingAnimation[0]], group);
   useEffect(()=> {
-  // actions[animation].reset().fadeIn(0.5).play();
+   actions[animation].reset().fadeIn(0.5).play();
    return () => {
-  //   actions[animation].reset().fadeOut(0.5);
+     actions[animation].reset().fadeOut(0.5);
    }
-  }, [])
+  }, [animation])
   return (
     <group {...props} receiveShadow castShadow ref={group} dispose={null}>
       <group rotation-x={-Math.PI / 2}>
@@ -50,3 +51,4 @@ export function Avatar(props) {
 }
 
 useGLTF.preload('/modelCharacter.glb')
+

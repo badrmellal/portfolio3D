@@ -22,7 +22,14 @@ export default function BubblesBG(props) {
   const { section } = props;
 
   return (
-<motion.group shadows dpr={[1, 2]} gl={{ antialias: false}} camera={{ fov: 50, position: [0, 0, 20] }} animate={{scale: section === 1 ? 0.08 : 0}} >
+<motion.group shadows 
+dpr={[1, 2]} 
+gl={{ antialias: false}} 
+camera={{ fov: 50, position: [0, 0, 20] }} 
+animate={{
+  scale: section === 1 ? 0.09 : 0, 
+  opacity: section === 1 ? 1 : 0
+  }} >
     <color attach="background" args={['#f0f0f0']} />
       <fog attach="fog" args={['purple', 20, -5]} />
       <ambientLight intensity={1.5} />

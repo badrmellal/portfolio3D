@@ -36,7 +36,7 @@ const IntroSection = () => {
           <span className="bg-white text-black px-1 italic">Badr Mellal</span>
         </h1>
         <motion.p
-          className="text-lg font-thin text-gray-300 mt-4"
+          className="text-lg font-thin text-gray-400 mt-4"
           initial={{
             opacity: 0,
             y: 25,
@@ -55,7 +55,7 @@ const IntroSection = () => {
           Mastering Cutting-Edge Technologies on a daily basis
         </motion.p>
         <motion.button
-          className={`bg-purple-700 text-white py-4 px-8 
+          className={`bg-indigo-700 text-white py-4 px-8 
         rounded-lg font-bold text-lg mt-16`}
           initial={{
             opacity: 0,
@@ -137,7 +137,7 @@ const IntroSection = () => {
                 </motion.h3>
                 <div className="h-2 w-full bg-gray-200 rounded-full mt-2">
                   <motion.div
-                    className="h-full bg-purple-600 rounded-full "
+                    className="h-full bg-indigo-600 rounded-full "
                     style={{ width: `${skill.level}%` }}
                     initial={{
                       scaleX: 0,
@@ -181,7 +181,7 @@ const IntroSection = () => {
                   </motion.h3>
                   <div className="h-2 w-full bg-gray-200 rounded-full mt-2">
                     <motion.div
-                      className="h-full bg-purple-600 rounded-full "
+                      className="h-full bg-indigo-600 rounded-full "
                       style={{ width: `${lng.level}%` }}
                       initial={{
                         scaleX: 0,

@@ -7,14 +7,9 @@ import { useEffect, useState } from 'react'
 import { ScrollManager } from './components/ScrollManager'
 import { Menu } from './components/Menu'
 import { MotionConfig } from 'framer-motion'
+import { framerMotionConfig } from './config'
+import { Cursor } from './components/Cursor'
 
-const framerMotionConfig = {
-  type: "spring",
-  mass: 5,
-  stiffness: 500,
-  damping: 50,
-  restDelta: 0.0001,
-};
 
 function App() {
   const [section, setSection] = useState(0);
@@ -45,7 +40,8 @@ function App() {
       </ScrollControls>
       </Canvas>
       <Menu onSectionChange={setSection} menuOpened={menuOpened} setMenuOpened={setMenuOpened} />
-    
+      <Cursor />
+
     </MotionConfig>
     </div>
     
