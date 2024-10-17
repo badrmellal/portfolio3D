@@ -14,17 +14,23 @@ export const ScrollManager = (props) => {
   data.fill.classList.add("absolute");
 
   useEffect(() => {
-    gsap.to(data.el, {
-      duration: 1,
-      scrollTop: section * data.el.clientHeight,
-      onStart: () => {
-        isAnimating.current = true;
-      },
-      onComplete: () => {
-        isAnimating.current = false;
-      },
-    });
+    // To scroll to the desired section when the section state changes
+    const scrollToSection = () => {
+      const targetScrollTop = section * data.el.clientHeight;
+      isAnimating.current = true;
+
+      gsap.to(data.el, {
+        duration: 1,
+        scrollTop: targetScrollTop,
+        onComplete: () => {
+          isAnimating.current = false;
+        },
+      });
+    };
+
+    scrollToSection();
   }, [section]);
+
 
   useFrame(() => {
     if (isAnimating.current) {
@@ -32,18 +38,16 @@ export const ScrollManager = (props) => {
       return;
     }
 
+    // we first calculate the current section based on the scroll position
     const curSection = Math.floor(data.scroll.current * data.pages);
-    if (data.scroll.current > lastScroll.current && curSection === 0) {
-      onSectionChange(1);
+
+    // we ensure that section updates only when it changes
+    if (curSection !== section) {
+      onSectionChange(curSection);
     }
-    if (
-      data.scroll.current < lastScroll.current &&
-      data.scroll.current < 1 / (data.pages - 1)
-    ) {
-      onSectionChange(0);
-    }
+
     lastScroll.current = data.scroll.current;
   });
-
+ 
   return null;
 };

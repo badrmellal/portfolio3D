@@ -1,77 +1,72 @@
 import { useEffect, useRef, useState } from "react";
+import { motion, useSpring, useMotionValue } from "framer-motion";
 
-const CURSOR_SPEED = 0.5;
-
-let mouseX = 0;
-let mouseY = 0;
-let outlineX = 0;
-let outlineY = 0;
 
 export const Cursor = () => {
-  const cursorOutline = useRef();
+  const cursorRef = useRef(null);
+  const cursorDotRef = useRef(null);
   const [hoverButton, setHoverButton] = useState(false);
 
-  const animate = () => {
-    let distX = mouseX - outlineX;
-    let distY = mouseY - outlineY;
-
-    outlineX = outlineX + distX * CURSOR_SPEED;
-    outlineY = outlineY + distY * CURSOR_SPEED;
-
-    cursorOutline.current.style.left = `${outlineX}px`;
-    cursorOutline.current.style.top = `${outlineY}px`;
-    requestAnimationFrame(animate);
-  };
+  const x = useMotionValue(-100);
+  const y = useMotionValue(-100);
+  const springX = useSpring(x, { stiffness: 200, damping: 20 });
+  const springY = useSpring(y, { stiffness: 200, damping: 20 });
 
   useEffect(() => {
-    const mouseEventsListener = document.addEventListener(
-      "mousemove",
-      function (event) {
-        mouseX = event.pageX;
-        mouseY = event.pageY;
-      }
-    );
-    const animateEvent = requestAnimationFrame(animate);
-    return () => {
-      document.removeEventListener("mousemove", mouseEventsListener);
-      cancelAnimationFrame(animateEvent);
+    const moveCursor = (e) => {
+      x.set(e.clientX);
+      y.set(e.clientY);
     };
-  }, []);
 
-  useEffect(() => {
-    const mouseEventListener = document.addEventListener(
-      "mouseover",
-      function (e) {
-        if (
-          e.target.tagName.toLowerCase() === "button" ||
-          // check parent is button
-          e.target.parentElement.tagName.toLowerCase() === "button" ||
-          // check is input or textarea
-          e.target.tagName.toLowerCase() === "input" ||
-          e.target.tagName.toLowerCase() === "textarea"
-        ) {
-          setHoverButton(true);
-        } else {
-          setHoverButton(false);
-        }
+    const handleMouseOver = (e) => {
+      const target = e.target;
+      if (
+        target.tagName.toLowerCase() === "button" ||
+        target.closest("button") ||
+        target.tagName.toLowerCase() === "a" ||
+        target.closest("a")
+      ) {
+        setHoverButton(true);
+      } else {
+        setHoverButton(false);
       }
-    );
-    return () => {
-      document.removeEventListener("mouseover", mouseEventListener);
     };
-  }, []);
+
+    document.addEventListener("mousemove", moveCursor);
+    document.addEventListener("mouseover", handleMouseOver);
+
+    return () => {
+      document.removeEventListener("mousemove", moveCursor);
+      document.removeEventListener("mouseover", handleMouseOver);
+    };
+  }, [x, y]);
 
   return (
     <>
-      <div
-        className={`z-50 fixed -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none transition-transform
-        ${
-          hoverButton
-            ? "bg-transparent border-2 border-white w-7 h-7"
-            : "bg-white w-5 h-5"
+      <motion.div
+        className={`z-50 fixed -translate-x-1/2 -translate-y-1/2 pointer-events-none transition-transform duration-200 ease-out ${
+          hoverButton ? "w-14 h-14 border-2 border-indigo-400" : "w-6 h-6"
         }`}
-        ref={cursorOutline}
-      ></div>
+        ref={cursorRef}
+        style={{
+          left: springX,
+          top: springY,
+          borderRadius: "50%",
+          backgroundColor: hoverButton ? "transparent" : "#fff",
+          mixBlendMode: hoverButton ? "difference" : "normal",
+        }}
+      ></motion.div>
+      <motion.div
+        className={`z-50 fixed -translate-x-1/2 -translate-y-1/2 pointer-events-none transition-transform duration-200 ease-out ${
+          hoverButton ? "w-2 h-2 bg-indigo-500" : "w-2 h-2 bg-indigo-500"
+        }`}
+        ref={cursorDotRef}
+        style={{
+          left: x,
+          top: y,
+          borderRadius: "50%",
+        }}
+      ></motion.div>
     </>
   );
 };
