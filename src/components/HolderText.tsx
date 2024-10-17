@@ -385,8 +385,8 @@ export const CloseIcon = () => {
       scale: 0.01
     },
     {
-      role: "Content-creator and Full Stack Developer",
-      company: "Self-employed",
+      role: "Software Developer",
+      company: "KLM Engineering Inc.",
       location: "Bristol",
       duration: "Jul 2024 - Present",
       color: "#F5A623",
