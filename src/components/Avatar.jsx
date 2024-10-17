@@ -15,12 +15,12 @@ export function Avatar(props) {
   const { nodes, materials } = useGraph(clone)
   const { animation } = props;
 
-  const { animations: typingAnimation } = useFBX("src/animations/Typing.fbx");
-  const { animations: fallingAnimation } = useFBX("src/animations/Falling.fbx");
-  const { animations: kneelingPointing } = useFBX("src/animations/Kneeling Pointing.fbx");
-  const { animations: idleAnimation } = useFBX("src/animations/Idle.fbx");
-  const { animations: leaningOnWall} = useFBX("src/animations/Leaning On A Wall.fbx");
-  const { animations: fallingIdle} = useFBX("src/animations/Falling Idle.fbx");
+  const { animations: typingAnimation } = useFBX("/animations/Typing.fbx");
+  const { animations: fallingAnimation } = useFBX("/animations/Falling.fbx");
+  const { animations: kneelingPointing } = useFBX("/animations/Kneeling Pointing.fbx");
+  const { animations: idleAnimation } = useFBX("/animations/Idle.fbx");
+  const { animations: leaningOnWall} = useFBX("/animations/Leaning On A Wall.fbx");
+  const { animations: fallingIdle} = useFBX("/animations/Falling Idle.fbx");
 
 
   typingAnimation[0].name = 'typing';
@@ -58,11 +58,11 @@ export function Avatar(props) {
 }
 
 useGLTF.preload('/modelCharacter.glb');
-useFBX.preload('src/animations/Typing.fbx');
-useFBX.preload('src/animations/Falling.fbx');
-useFBX.preload('src/animations/Kneeling Pointing.fbx');
-useFBX.preload('src/animations/Idle.fbx');
-useFBX.preload('src/animations/Leaning On A Wall.fbx');
-useFBX.preload('src/animations/Falling Idle.fbx');
+useFBX.preload('/animations/Typing.fbx');
+useFBX.preload('/animations/Falling.fbx');
+useFBX.preload('/animations/Kneeling Pointing.fbx');
+useFBX.preload('/animations/Idle.fbx');
+useFBX.preload('/animations/Leaning On A Wall.fbx');
+useFBX.preload('/animations/Falling Idle.fbx');
 
 
