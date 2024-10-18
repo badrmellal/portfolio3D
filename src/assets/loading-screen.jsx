@@ -1,21 +1,35 @@
 import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useSpring } from "framer-motion";
 import audioFilesMain from "/audioFilesMain.mp3";
 
 export const LoadingScreen = ({ started, onStarted, loadingProgress }) => {
-  const [displayProgress, setDisplayProgress] = useState(0);
   const [showEnterButton, setShowEnterButton] = useState(false);
   const mainAudioRef = useRef(new Audio(audioFilesMain));
+  const [isLoaded, setIsLoaded] = useState(false);
+  
+  // Use Framer Motion's useSpring for smooth progress updates
+  const displayProgress = useSpring(0, { stiffness: 100, damping: 30, restDelta: 0.001 });
 
   useEffect(() => {
-    setDisplayProgress(loadingProgress);
-
-    if (loadingProgress === 100) {
-     setTimeout(() => {
-      setShowEnterButton(true);
-     }, 500) 
+    let interval;
+    if (!isLoaded) {
+      interval = setInterval(() => {
+        displayProgress.get() < 95 && displayProgress.set(displayProgress.get() + 0.5);
+      }, 100);
     }
-  }, [loadingProgress]);
+
+    return () => clearInterval(interval);
+  }, [isLoaded, displayProgress]);
+
+  useEffect(() => {
+    if (loadingProgress === 100 && !isLoaded) {
+      setIsLoaded(true);
+      displayProgress.set(100);
+      setTimeout(() => {
+        setShowEnterButton(true);
+      }, 500);
+    }
+  }, [loadingProgress, isLoaded, displayProgress]);
 
   const handleEnterClicked = () => {
     mainAudioRef.current.play().then(() => {
@@ -23,8 +37,8 @@ export const LoadingScreen = ({ started, onStarted, loadingProgress }) => {
       onStarted(true);
     }).catch((err) => {
       console.log("Audio play was stopped because: ", err);
-    })
-  }
+    });
+  };
 
   return (
     <div
@@ -32,39 +46,31 @@ export const LoadingScreen = ({ started, onStarted, loadingProgress }) => {
         started ? "opacity-0 pointer-events-none" : "opacity-100"
       }`}
     >
-      {!showEnterButton && (
-        <motion.svg
-          className="w-40 h-40 sm:w-56 sm:h-56 md:w-72 md:h-72 lg:w-96 lg:h-96"
-          viewBox="0 0 100 100"
-          initial={{ opacity: 1 }}
-          animate={{ opacity: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <motion.text
-            x="50%"
-            y="50%"
-            dominantBaseline="middle"
-            textAnchor="middle"
-            fontSize="20"
-            fill="white"
-            fontFamily="Montserrat"
-            initial={{ scale: 1 }}
-            animate={{ scale: [1, 1.2, 1], opacity: [1, 0.5, 1] }}
-            transition={{
-              repeat: Infinity,
-              duration: 2,
-              ease: "easeInOut",
-            }}
-          >
-            {displayProgress.toFixed(0)}%
-          </motion.text>
-        </motion.svg>
-      )}
+      <motion.div
+        className="w-64 h-2 bg-gray-700 rounded-full overflow-hidden"
+        initial={{ opacity: 1 }}
+        animate={{ opacity: showEnterButton ? 0 : 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <motion.div
+          className="h-full bg-white"
+          style={{ width: displayProgress.get() + '%' }}
+        />
+      </motion.div>
+
+      <motion.div
+        className="mt-4 text-white text-2xl font-montserrat"
+        initial={{ opacity: 1 }}
+        animate={{ opacity: showEnterButton ? 0 : 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        {displayProgress.get().toFixed(0)}%
+      </motion.div>
 
       <AnimatePresence>
         {showEnterButton && (
           <motion.div
-            className="text-center text-white"
+            className="text-center text-white mt-8"
             initial={{ scale: 0.5, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.5, opacity: 0 }}
@@ -76,7 +82,8 @@ export const LoadingScreen = ({ started, onStarted, loadingProgress }) => {
           >
             <button 
               className="text-3xl md:text-5xl lg:text-6xl font-montserrat font-bold text-white border border-white bg-transparent px-8 py-4 rounded-lg shadow-lg hover:bg-white hover:text-black transition-colors duration-300"
-              onClick={handleEnterClicked}>
+              onClick={handleEnterClicked}
+            >
               Enter
             </button>
           </motion.div>
