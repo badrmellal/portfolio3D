@@ -1,18 +1,24 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useSpring, useMotionValue } from "framer-motion";
 
-
 export const Cursor = () => {
   const cursorRef = useRef(null);
   const cursorDotRef = useRef(null);
   const [hoverButton, setHoverButton] = useState(false);
-
+  const [isMobile, setIsMobile] = useState(false);
   const x = useMotionValue(-100);
   const y = useMotionValue(-100);
   const springX = useSpring(x, { stiffness: 200, damping: 20 });
   const springY = useSpring(y, { stiffness: 200, damping: 20 });
 
   useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768); // Adjust this value as needed
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
     const moveCursor = (e) => {
       x.set(e.clientX);
       y.set(e.clientY);
@@ -32,14 +38,21 @@ export const Cursor = () => {
       }
     };
 
-    document.addEventListener("mousemove", moveCursor);
-    document.addEventListener("mouseover", handleMouseOver);
+    if (!isMobile) {
+      document.addEventListener("mousemove", moveCursor);
+      document.addEventListener("mouseover", handleMouseOver);
+    }
 
     return () => {
+      window.removeEventListener("resize", checkMobile);
       document.removeEventListener("mousemove", moveCursor);
       document.removeEventListener("mouseover", handleMouseOver);
     };
-  }, [x, y]);
+  }, [x, y, isMobile]);
+
+  if (isMobile) {
+    return null; // Don't render anything on mobile
+  }
 
   return (
     <>
