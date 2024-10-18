@@ -1,30 +1,28 @@
-import { useProgress } from "@react-three/drei";
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import audioFilesMain from "/audioFilesMain.mp3";
 
-export const LoadingScreen = ({ started, onStarted }) => {
-  const { progress } = useProgress();
+export const LoadingScreen = ({ started, onStarted, loadingProgress }) => {
   const [displayProgress, setDisplayProgress] = useState(0);
   const [showEnterButton, setShowEnterButton] = useState(false);
   const mainAudioRef = useRef(new Audio(audioFilesMain));
 
   useEffect(() => {
-    setDisplayProgress(progress);
+    setDisplayProgress(loadingProgress);
 
-    if (progress === 100) {
-     setTimeout(()=>{
+    if (loadingProgress === 100) {
+     setTimeout(() => {
       setShowEnterButton(true);
      }, 500) 
     }
-  }, [progress]);
+  }, [loadingProgress]);
 
-  const handleEnterClicked = () =>{
-    mainAudioRef.current.play().then(()=>{
+  const handleEnterClicked = () => {
+    mainAudioRef.current.play().then(() => {
       mainAudioRef.current.loop = true;
       onStarted(true);
-    }).catch((err)=> {
-      console.log("Audio play was stoped because: ", err);
+    }).catch((err) => {
+      console.log("Audio play was stopped because: ", err);
     })
   }
 
