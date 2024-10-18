@@ -19,7 +19,6 @@ export function Avatar(props) {
   const { animations: fallingAnimation } = useFBX("/animations/Falling.fbx");
   const { animations: kneelingPointing } = useFBX("/animations/Kneeling Pointing.fbx");
   const { animations: idleAnimation } = useFBX("/animations/Idle.fbx");
-  const { animations: leaningOnWall} = useFBX("/animations/Leaning On A Wall.fbx");
   const { animations: fallingIdle} = useFBX("/animations/Falling Idle.fbx");
 
 
@@ -27,10 +26,9 @@ export function Avatar(props) {
   fallingAnimation[0].name = 'falling';
   kneelingPointing[0].name = 'pointing';
   idleAnimation[0].name = 'idle';
-  leaningOnWall[0].name = 'leaning';
   fallingIdle[0].name = 'fallingIdle';
 
-  const { actions } = useAnimations([typingAnimation[0], fallingAnimation[0], kneelingPointing[0], fallingIdle[0], idleAnimation[0], leaningOnWall[0]], group);
+  const { actions } = useAnimations([typingAnimation[0], fallingAnimation[0], kneelingPointing[0], fallingIdle[0], idleAnimation[0]], group);
   useEffect(()=> {
     actions[animation].reset().play();
    return () => {
@@ -62,7 +60,7 @@ useFBX.preload('/animations/Typing.fbx');
 useFBX.preload('/animations/Falling.fbx');
 useFBX.preload('/animations/Kneeling Pointing.fbx');
 useFBX.preload('/animations/Idle.fbx');
-useFBX.preload('/animations/Leaning On A Wall.fbx');
 useFBX.preload('/animations/Falling Idle.fbx');
+
 
 
