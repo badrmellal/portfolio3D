@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "routes": [
+    {
+      "src": "/animations/(.*)\\.fbx",
+      "headers": {
+        "cache-control": "public, max-age=31536000, immutable"
+      },
+      "continue": true
+    },
+    {
+      "src": "/FinalScene\\.glb",
+      "headers": {
+        "cache-control": "public, max-age=31536000, immutable"
+      },
+      "continue": true
+    }
+  ]
+}
